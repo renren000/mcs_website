@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生団体 Media Creative Supporter (MCS) 公式サイト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        body {
+            font-family: 'Noto Sans JP', 'Inter', sans-serif;
+            background-color: #FFFFFF;
+            color: #1f2937;
+            overflow-x: hidden; /* 横スクロール防止 */
+        }
+        /* アクセントカラー */
+        .accent-red { color: #E53E3E !important; } /* ロゴの赤に合わせる */
+        .accent-blue { color: #3B82F6 !important; } /* ロゴの青に合わせる */
+        .accent-purple { color: #8B5CF6 !important; } /* ロゴの紫に合わせる */
+        .accent-black { color: #111827; }
+
+        .bg-accent-red { background-color: #E53E3E; }
+        .bg-accent-blue { background-color: #3B82F6; }
+        .bg-accent-purple { background-color: #8B5CF6; }
+        .bg-accent-black { background-color: #111827; }
+
+        #navbar {
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
+        }
+        #navbar.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding-top: 0.75rem; /* 12px */
+            padding-bottom: 0.75rem; /* 12px */
+        }
+        .nav-logo {
+            max-height: 40px; /* ロゴの高さ調整 */
+            transition: max-height 0.3s ease;
+        }
+        #navbar.scrolled .nav-logo {
+            max-height: 32px;
+        }
+        .nav-title-mcs span { /* ヘッダーのMCS文字色を確実に適用 */
+            font-weight: 900; /* より太くして目立たせる */
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0; /* 背景より手前、コンテンツより奥 */
+        }
+        .hero-bg {
+            background-color: #111827; /* ダークな背景でパーティクルを引き立てる */
+            position: relative;
+            overflow: hidden; /* particles.jsがはみ出ないように */
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1; /* パーティクルより手前 */
+        }
+        .hero-logo {
+            max-width: 200px; /* ヒーローセクションのロゴサイズ */
+            margin-bottom: 1.5rem;
+        }
+        .hero-title span.colored-letter { /* ヒーローセクションの頭文字の色付け用 */
+             display: inline-block; /* アニメーションや細かい調整のため */
+        }
+
+
+        /* アニメーション */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1), transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card-hover {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .section-title-underline {
+            display: inline-block;
+            position: relative;
+            padding-bottom: 10px;
+            margin-bottom: 1rem;
+        }
+        .section-title-underline::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 70px;
+            height: 5px;
+            border-radius: 2.5px;
+        }
+        .accent-red-underline::after { background-color: #E53E3E; }
+        .accent-blue-underline::after { background-color: #3B82F6; }
+        .accent-purple-underline::after { background-color: #8B5CF6; }
+        .accent-black-underline::after { background-color: #111827; }
+
+        .text-shadow-custom {
+            text-shadow: 0px 0px 15px rgba(200,200,200,0.3), 0px 0px 8px rgba(200,200,200,0.5); /* 色付き文字用に影を調整 */
+        }
+        .btn-primary {
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px; /* 丸みを帯びたボタン */
+            font-weight: 700; /* Bold */
+            transition: all 0.3s ease;
+            color: white;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        .btn-red { background: linear-gradient(45deg, #EF4444, #DC2626); } .btn-red:hover { background: linear-gradient(45deg, #DC2626, #EF4444); }
+        .btn-blue { background: linear-gradient(45deg, #3B82F6, #2563EB); } .btn-blue:hover { background: linear-gradient(45deg, #2563EB, #3B82F6); }
+        .btn-purple { background: linear-gradient(45deg, #8B5CF6, #7C3AED); } .btn-purple:hover { background: linear-gradient(45deg, #7C3AED, #8B5CF6); }
+        .btn-black { background: linear-gradient(45deg, #374151, #111827); } .btn-black:hover { background: linear-gradient(45deg, #111827, #374151); }
+
+
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            opacity: 0;
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        #mobile-menu.hidden {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        .kaisers-tv-kun {
+            max-width: 280px; 
+            margin-top: 1rem;
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        .activity-item {
+            background-color: #f9fafb; 
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid; 
+        }
+        .activity-item.border-red { border-color: #E53E3E; }
+        .activity-item.border-blue { border-color: #3B82F6; }
+        .activity-item.border-purple { border-color: #8B5CF6; }
+
+        .works-list li a {
+            transition: color 0.3s ease;
+        }
+        .works-list li a:hover {
+            color: #3B82F6; 
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; 
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+    </style>
+</head>
+<body class="bg-white">
+
+    <nav id="navbar" class="fixed w-full top-0 z-50 p-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center">
+                <img src="MCSロゴ.png" alt="MCS Logo" class="nav-logo mr-2" onerror="this.style.display='none'; console.error('MCSロゴ.png が読み込めませんでした。ファイルパスを確認してください。')">
+                <span class="text-2xl font-bold hidden sm:inline nav-title-mcs">
+                    <span class="accent-red">M</span><span class="accent-blue">C</span><span class="accent-purple">S</span>
+                </span>
+            </a>
+            <div class="hidden md:flex space-x-8 items-center text-lg">
+                <a href="#about-mcs" class="hover:accent-blue transition-colors duration-300 font-medium">MCSとは</a>
+                <a href="#kaisers-tv" class="hover:accent-red transition-colors duration-300 font-medium">KAISERS TV</a>
+                <a href="#activities" class="hover:accent-purple transition-colors duration-300 font-medium">活動記録</a>
+                <a href="#contact-sns" class="hover:accent-blue transition-colors duration-300 font-medium">SNS/連絡先</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="focus:outline-none text-gray-700 hover:text-accent-purple transition-colors">
+                    <i class="fas fa-bars text-3xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="md:hidden fixed top-0 right-0 w-3/4 max-w-sm h-full bg-gray-900 text-white p-8 z-40 shadow-2xl transform hidden">
+        <button id="close-mobile-menu" class="absolute top-6 right-6 text-3xl text-gray-400 hover:text-white transition-colors">×</button>
+        <div class="mt-16 flex flex-col space-y-8 text-xl">
+            <a href="#about-mcs" class="hover:text-blue-400 transition-colors block mobile-menu-link">MCSとは</a>
+            <a href="#kaisers-tv" class="hover:text-red-400 transition-colors block mobile-menu-link">KAISERS TV</a>
+            <a href="#activities" class="hover:text-purple-400 transition-colors block mobile-menu-link">活動記録</a>
+            <a href="#contact-sns" class="hover:text-blue-400 transition-colors block mobile-menu-link">SNS/連絡先</a>
+        </div>
+    </div>
+
+    <section id="hero" class="hero-bg h-screen flex items-center justify-center text-white text-center">
+        <div id="particles-js"></div>
+        <div class="hero-content p-4 reveal">
+            <img src="MCSロゴ.png" alt="MCS Logo" class="hero-logo mx-auto" onerror="this.style.display='none'; console.error('ヒーローセクションのMCSロゴ.png が読み込めませんでした。')">
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-black mb-6 text-shadow-custom leading-tight hero-title">
+                <span class="accent-red colored-letter">M</span>edia <span class="accent-blue colored-letter">C</span>reative <span class="accent-purple colored-letter">S</span>upporter
+            </h1>
+            <p class="text-xl md:text-3xl font-semibold mb-10 text-shadow-custom">「人とは違うことをしよう。４年間も。その先も。」</p>
+            <a href="#about-mcs" class="btn-primary btn-red text-lg shadow-lg">MCSをもっと知る <i class="fas fa-arrow-down ml-2 animate-bounce"></i></a>
+        </div>
+    </section>
+
+    <div class="container mx-auto px-4 py-16 md:py-24 space-y-20 md:space-y-32">
+
+        <section id="about-mcs" class="reveal">
+            <h2 class="text-4xl md:text-5xl font-bold text-center section-title-underline accent-red-underline">MCSとは</h2>
+            <p class="text-center text-gray-600 mb-16 text-xl">Media Creative Supporter (MCS) について</p>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="video-container card-hover">
+                        <iframe src="https://drive.google.com/file/d/1urkXgUjessNJbLus3SeFfvbbYNkaKZ2t/preview" allow="autoplay; encrypted-media" allowfullscreen title="MCS 紹介動画"></iframe>
+                    </div>
+                </div>
+                <div class="text-lg space-y-5">
+                    <p>Media Creative Supporter (MCS) は、関西大学公認の映像ボランティア団体です。主に総合情報学部の学生で構成され、高槻キャンパスを拠点に活動しています。</p>
+                    <p>「<strong class="accent-purple font-semibold">人とは違うことをしよう。４年間も。その先も。</strong>」をスローガンに掲げ、映像作品の自主制作、スタジオイベントの企画・開催、学内外での多様な映像関連活動を行っています。</p>
+                    <p>関西大学の公式行事の撮影・編集協力や、体育会KAISERSのYouTubeチャンネル「KAISERS TV」の運営・制作など、大学の広報活動や活性化にも貢献しています。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="kaisers-tv" class="reveal">
+            <h2 class="text-4xl md:text-5xl font-bold text-center section-title-underline accent-blue-underline">KAISERS TV</h2>
+            <p class="text-center text-gray-600 mb-16 text-xl">関西大学体育会KAISERSを映像で応援！</p>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-lg md:order-2 flex flex-col items-center justify-center">
+                    <img src="KAISERS TVくん.png" alt="KAISERS TVくん" class="kaisers-tv-kun rounded-lg shadow-xl" onerror="this.style.display='none'; console.error('KAISERS TVくん.png が読み込めませんでした。')">
+                </div>
+                <div class="md:order-1 text-lg space-y-5">
+                    <p>MCSは、関西大学体育会KAISERSの活動を映像で伝え、応援するYouTubeチャンネル「<strong class="accent-red font-semibold">KAISERS TV</strong>」の運営と制作に深く関わっています。</p>
+                    <p>試合のライブ配信、ハイライト動画、選手インタビュー、プロモーションビデオなど、多彩なコンテンツを通じてKAISERSの魅力を発信しています。</p>
+                    <p class="mb-6">そのクオリティの高さは大学からも認められ、大学活性化に貢献していると評価されています。</p>
+                    <a href="https://www.youtube.com/@KAISERSTV" target="_blank" rel="noopener noreferrer" class="btn-primary btn-red inline-block shadow-md">
+                        KAISERS TVチャンネルへ <i class="fab fa-youtube ml-2"></i>
+                    </a>
+                    <h3 class="text-2xl font-bold mt-10 mb-4 accent-blue">注目動画ピックアップ</h3>
+                    <div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-2xl card-hover">
+                        <iframe src="https://www.youtube.com/embed/WdLmalJWdKA" title="伊達 Luke 敬信氏（NPO法人 UMINARI CEO/代表理事）オンライン交流会ダイジェスト" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">※上記はMCSが制作に関わったSDGs関連動画の一例です。KAISERS TVの最新動画はチャンネルでご確認ください。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="activities" class="reveal">
+            <h2 class="text-4xl md:text-5xl font-bold text-center section-title-underline accent-purple-underline">活動記録</h2>
+            <p class="text-center text-gray-600 mb-16 text-xl">MCSの多様な活動をご紹介します</p>
+
+            <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-10">
+                <div class="bg-white p-8 rounded-xl shadow-xl card-hover transform hover:scale-105">
+                    <div class="mb-6 text-center">
+                        <i class="fas fa-newspaper text-5xl accent-red"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-center accent-red">メディア掲載</h3>
+                    <p class="mb-4 text-gray-700">MCSの活動やメンバーがメディアに取り上げられました。</p>
+                    <div class="activity-item border-red">
+                        <h4 class="font-semibold text-lg">J:COM「ジモトトピックス」</h4>
+                        <p class="text-sm text-gray-600 mb-1">特集「関西大学 SDGSの今」(2024年2月放送)</p>
+                        <p class="text-sm">MCSの学生が中心となり、関西大学のSDGsへの取り組みを取材・制作しました。</p>
+                        <a href="https://www2.myjcom.jp/special/jch/jimotopi/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 font-semibold text-sm mt-2 inline-block transition-colors">J:COMジモトトピックスへ <i class="fas fa-external-link-alt ml-1"></i></a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-xl card-hover transform hover:scale-105">
+                     <div class="mb-6 text-center">
+                        <i class="fas fa-film text-5xl accent-blue"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-center accent-blue">自主制作作品</h3>
+                    <p class="mb-4 text-gray-700">学生ならではの視点で、ユニークな映像作品を制作しています。</p>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4 pl-2 works-list">
+                        <li><a href="https://www.youtube.com/results?search_query=関西大学MCS+人力王決定戦" target="_blank" rel="noopener noreferrer">人力王決定戦</a></li>
+                        <li><a href="https://www.youtube.com/results?search_query=関西大学MCS+解決！落単回避対策室+コン言編" target="_blank" rel="noopener noreferrer">解決！落単回避対策室 コン言編</a></li>
+                        <li><a href="https://www.youtube.com/results?search_query=関西大学MCS+完全潔癖" target="_blank" rel="noopener noreferrer">完全潔癖</a></li>
+                        <li><a href="https://www.youtube.com/results?search_query=関西大学MCS+情報処理タイムズ" target="_blank" rel="noopener noreferrer">情報処理タイムズ</a></li>
+                    </ul>
+                    <a href="https://www.youtube.com/@MCSTube" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-800 font-semibold inline-block transition-colors">
+                        その他の作品を見る (YouTubeチャンネル) <i class="fab fa-youtube ml-1"></i>
+                    </a>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-xl card-hover transform hover:scale-105">
+                     <div class="mb-6 text-center">
+                        <i class="fas fa-hands-helping text-5xl accent-purple"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-center accent-purple">大学・社会連携</h3>
+                    <p class="mb-4 text-gray-700">大学行事の撮影や、地域イベントの映像制作など、幅広く協力しています。</p>
+                    <div class="space-y-3">
+                        <div class="activity-item border-purple">
+                            <p class="font-semibold text-md">「カンダイでスタンバイ」撮影協力</p>
+                             <a href="https://www.youtube.com/results?search_query=カンダイでスタンバイ+関西大学総合情報学部" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-800 font-semibold text-sm mt-1 inline-block transition-colors">関連動画を見る <i class="fas fa-video ml-1"></i></a>
+                        </div>
+                        <div class="activity-item border-purple">
+                            <p class="font-semibold text-md">伊達 Luke 敬信氏オンライン交流会動画制作</p>
+                             <div class="mt-2 aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-md">
+                                 <iframe src="https://www.youtube.com/embed/WdLmalJWdKA" title="伊達 Luke 敬信氏（NPO法人 UMINARI CEO/代表理事）オンライン交流会ダイジェスト" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="activity-item border-blue">
+                             <p class="font-semibold text-md">高槻市市制施行80周年記念PV制作協力</p>
+                             <a href="https://www.youtube.com/results?search_query=高槻市市制施行80周年記念PV+関西大学MCS" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 font-semibold text-sm mt-1 inline-block transition-colors">関連動画を見る <i class="fas fa-video ml-1"></i></a>
+                        </div>
+                         <div class="activity-item border-red">
+                             <p class="font-semibold text-md">メディカルラリー密着取材・動画制作</p>
+                             <a href="https://www.youtube.com/results?search_query=メディカルラリー+関西大学MCS" target="_blank" rel="noopener noreferrer" class="text-red-600 hover:text-red-800 font-semibold text-sm mt-1 inline-block transition-colors">関連動画を見る <i class="fas fa-video ml-1"></i></a>
+                        </div>
+                        <div class="activity-item border-purple">
+                             <p class="font-semibold text-md">はにこっとイベント記録映像制作</p>
+                             <a href="https://www.youtube.com/results?search_query=はにこっと+関西大学MCS" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-800 font-semibold text-sm mt-1 inline-block transition-colors">関連動画を見る <i class="fas fa-video ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact-sns" class="reveal">
+            <h2 class="text-4xl md:text-5xl font-bold text-center section-title-underline accent-black-underline">SNS & 連絡先</h2>
+            <p class="text-center text-gray-600 mb-16 text-xl">MCSの最新情報をチェック！お気軽にお問い合わせください。</p>
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-6 md:space-y-0 md:space-x-8">
+                <a href="https://www.instagram.com/mcs_kutc/" target="_blank" rel="noopener noreferrer" class="btn-primary btn-purple text-lg shadow-lg flex items-center">
+                    <i class="fab fa-instagram text-2xl mr-3"></i> Instagram
+                </a>
+                 <a href="https://x.com/mcs_kutc" target="_blank" rel="noopener noreferrer" class="btn-primary btn-black text-lg shadow-lg flex items-center"> <i class="fab fa-twitter text-2xl mr-3"></i> X (Twitter)
+                </a>
+                <a href="https://www.youtube.com/@MCSTube" target="_blank" rel="noopener noreferrer" class="btn-primary btn-red text-lg shadow-lg flex items-center"> <i class="fab fa-youtube text-2xl mr-3"></i> YouTube (MCS)
+                </a>
+            </div>
+            <div class="text-center mt-16 text-gray-700">
+                <p class="text-lg">関西大学 総合情報学部 事務室</p>
+                <p>〒569-1095 大阪府高槻市霊仙寺町2-1-1</p>
+                <p>電話: 072-690-2151 (学部代表)</p>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="bg-accent-black text-white py-12 text-center">
+        <div class="container mx-auto">
+            <img src="MCSロゴ.png" alt="MCS Logo" class="h-12 mx-auto mb-4" onerror="this.style.display='none'; console.error('フッターのMCSロゴ.png が読み込めませんでした。')">
+            <p class="text-lg">© <span id="current-year"></span> Media Creative Supporter (MCS), Kansai University. All Rights Reserved.</p>
+            <p class="text-sm mt-3 opacity-75">このウェブサイトは情報提供を目的として学生団体MCSの活動を紹介するために作成されたものです。</p>
+        </div>
+    </footer>
+
+    <script>
+        // ナビゲーションバーのスクロールエフェクト
+        const navbar = document.getElementById('navbar');
+        window.onscroll = () => {
+            if (window.scrollY > 80) { 
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        };
+
+        // モバイルメニューのトグル
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+            setTimeout(() => mobileMenu.classList.add('open'), 10); 
+        });
+
+        const closeMenu = () => {
+            mobileMenu.classList.remove('open');
+            setTimeout(() => mobileMenu.classList.add('hidden'), 300); 
+        };
+
+        closeMobileMenuButton.addEventListener('click', closeMenu);
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                closeMenu();
+            });
+        });
+
+        // スクロールに応じたアニメーション (Intersection Observer)
+        const revealElements = document.querySelectorAll('.reveal');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15 
+        };
+        const observer = new IntersectionObserver((entries, observerInstance) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observerInstance.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        revealElements.forEach(el => {
+            observer.observe(el);
+        });
+
+        // フッターの年を自動更新
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // スムーズスクロール (エラー修正済み)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+
+                if (targetId && targetId.length > 1 && targetId.startsWith('#')) {
+                    try {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            e.preventDefault(); 
+                            
+                            const headerOffset = navbar.offsetHeight + 20;
+                            const elementPosition = targetElement.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    } catch (err) {
+                        console.error("スムーススクロールで要素の検索中にエラーが発生しました:", err);
+                    }
+                } else if (targetId === '#') {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    console.log("href='#' のリンクがクリックされました。ページトップへスクロールします。");
+                }
+            });
+        });
+
+        // particles.jsの初期化
+        if (document.getElementById('particles-js')) {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": ["#E53E3E", "#3B82F6", "#8B5CF6", "#ffffff"] },
+                    "shape": { "type": "triangle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 } },
+                    "opacity": { "value": 0.6, "random": false, "anim": { "enable": true, "speed": 0.8, "opacity_min": 0.1, "sync": false } },
+                    "size": { "value": 4, "random": true, "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false } },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.3, "width": 1 },
+                    "move": { "enable": true, "speed": 5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 } }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                    "modes": {
+                        "grab": { "distance": 140, "line_linked": { "opacity": 0.7 } },
+                        "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 },
+                        "repulse": { "distance": 200, "duration": 0.4 },
+                        "push": { "particles_nb": 4 },
+                        "remove": { "particles_nb": 2 }
+                    }
+                },
+                "retina_detect": true
+            });
+        }
+
+        // 画像読み込みエラー時のフォールバック処理を追加
+        document.querySelectorAll('img').forEach(img => {
+            img.onerror = function() {
+                console.error("画像の読み込みに失敗しました: " + this.src + ". ファイルパスとファイル名が正しいか確認してください。大文字・小文字も区別されます。");
+            };
+        });
+    </script>
+</body>
+</html>
